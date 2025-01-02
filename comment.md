@@ -6,3 +6,5 @@ docker-compose up
 docker-compose up --build
 docker-composer build composer
 docker-compose run --rm composer
+docker-compose build composer
+docker-compose run --rm composer create-project laravel/laravel .
