@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: 
+      context: .
+      dockerfile: nginx.dockerfile
+
+    ports:
+      - "80:80"  
+
+    volumes:
+       - ./src:/var/www/html
+
+    depends_on:
+      - mysql   
+      - php
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel    
+
+    volumes:
+       - ./mysql:/var/lib/mysql      
+
+  php:
+     build: 
+        context: .
+        dockerfile: php.dockerfile
+
+     volumes:
+         - ./src:/var/www/html  
+
+  composer:
+    build:
+      context: .
+      dockerfile: composer.dockerfile
+    volumes:
+      - ./src:/var/www/html
+
+    working_dir: /var/www/html   
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - mysql  
+            
+  
+        
