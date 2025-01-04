@@ -12,3 +12,6 @@ docker-compose run --rm npm install
 docker-compose run --rm run dev
 
 docker-compose run --rm artisan migrate
+
+docker-compose run --rm artisan make:controller Api/V1/TicketController --resource --model=Ticket --requests
+sudo systemctl stop apache2
