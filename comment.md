@@ -14,4 +14,5 @@ docker-compose run --rm run dev
 docker-compose run --rm artisan migrate
 
 docker-compose run --rm artisan make:controller Api/V1/TicketController --resource --model=Ticket --requests
+docker-compose run --rm artisan make:resource V1/UserResource
 sudo systemctl stop apache2
