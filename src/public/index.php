@@ -1,36 +1,17 @@
 <?php
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Selective\BasePath\BasePathMiddleware;
-use Slim\Factory\AppFactory;
+use Illuminate\Http\Request;
 
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../app/db/db.php';
+define('LARAVEL_START', microtime(true));
 
-// Create App
-$app = AppFactory::create();
-$app->setBasePath("/src/public");
+// Determine if the application is in maintenance mode...
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
+}
 
-// Add Slim routing middleware
-$app->addRoutingMiddleware();
+// Register the Composer autoloader...
+require __DIR__.'/../vendor/autoload.php';
 
-// Set the base path to run the app in a subdirectory.
-// This path is used in urlFor().
-$app->add(new BasePathMiddleware($app));
-
-$app->addErrorMiddleware(true, true, true);
-
-// Define app routes
-$app->get('/', function (Request $request, Response $response) {
-    $response->getBody()->write('Hello, World!');
-    return $response;
-})->setName('root');
-
-// Run routes
-require __DIR__ . '/../app/routes/users.php';
-
-
-
-// Run app
-$app->run();
+// Bootstrap Laravel and handle the request...
+(require_once __DIR__.'/../bootstrap/app.php')
+    ->handleRequest(Request::capture());
