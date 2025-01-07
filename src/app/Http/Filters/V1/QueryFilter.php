@@ -15,6 +15,16 @@ abstract class QueryFilter
     $this->request = $request;
   }
 
+  public function filters($arr)
+  {
+    foreach ($arr as $name => $value) {
+      if (method_exists($this, $name)) {
+      $this->$name($value);
+      }
+  }
+  return $this->builder;
+}
+
   public function apply(Builder $builder)
   {
     $this->builder = $builder;
